@@ -42,7 +42,7 @@ export async function getStaticPaths () {
 
   return {
     paths: routes || null,
-    fallback: true
+    fallback: false
   }
 }
 

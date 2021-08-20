@@ -4,3 +4,6 @@ public/studio
 .env.development
 .env
 .next
+public/images/
+.env.test
+out

@@ -1,7 +1,8 @@
 import Error from "next/error";
 import { useRouter } from "next/router";
-import { getClient, usePreviewSubscription } from "../../utils/sanity";
+import { urlFor, getClient, usePreviewSubscription } from "../../utils/sanity";
 import ProductsPage from "../../components/ProductsPage";
+import { downloadFile } from "../../utils/yunbox";
 
 const query = `//groq
   *[_type == "product" && defined(slug.current)]
@@ -22,6 +23,19 @@ function ProductsPageContainer({ productsData, preview }) {
 
 export async function getStaticProps({ params = {}, preview = false }) {
   const productsData = await getClient(preview).fetch(query);
+
+  productsData.map(pd => {
+    const image = pd['mainImage'];
+    const sanityImage = urlFor(image)
+                .auto("format")
+                .width(1051)
+                .fit("crop")
+                .quality(80);
+    const imageURL = sanityImage.url();
+    const fn = image.asset._ref.replace('image-', '').replace('-jpg', '');
+    const destPath = `../public/images/${fn}.jpg`;
+    downloadFile(imageURL, destPath);
+  });
 
   return {
     props: { preview, productsData },

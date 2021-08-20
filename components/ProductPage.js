@@ -1,14 +1,17 @@
-import {useState} from 'react'
+import {useState} from 'react'
 import { urlFor, PortableText, getClient } from "../utils/sanity";
+import { localfileURL } from '../utils/yunbox-utils';
 
 function ProductPage(props) {
   const [count, setCount] = useState(1)
   const handleCount = (value) => !(count === 0 && value === -1) ? setCount(count + value) : count
   const { title, defaultProductVariant, mainImage, body } = props;
+
   return (
     <div className="container mx-auto px-6">
       <div className="md:flex md:items-center">
         <div className="w-full h-64 md:w-1/2 lg:h-96">
+          {/* Was using Sanity CDN, it's changed to localfile        
           <img
             className="h-full w-full rounded-md object-cover max-w-lg mx-auto"
             src={urlFor(mainImage)
@@ -17,7 +20,12 @@ function ProductPage(props) {
               .fit("crop")
               .quality(80)}
             alt={mainImage?.alt || `Photo of ${title}`}
-          />
+          />*/}
+          <img
+          className="h-full w-full rounded-md object-cover max-w-lg mx-auto"
+              src={localfileURL(mainImage)}
+              alt={mainImage?.alt || `Photo of ${title}`}
+            />
         </div>
         <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
           <h3 className="text-gray-700 uppercase text-lg">{title}</h3>
