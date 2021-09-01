@@ -34,7 +34,7 @@ function IndexPage(props) {
 export async function getStaticProps({ params = {}, preview = false }) {
   const productsData = await getClient(preview).fetch(query);
 
-  productsData.map(pd => {
+  let promises = productsData.map(async (pd) => {
     const image = pd['mainImage'];
     const sanityImage = urlFor(image)
                 .auto("format")
@@ -44,8 +44,12 @@ export async function getStaticProps({ params = {}, preview = false }) {
     const imageURL = sanityImage.url();
     const fn = image.asset._ref.replace('image-', '').replace('-jpg', '');
     const destPath = `../public/images/${fn}.jpg`;
-    downloadFile(imageURL, destPath);
+    return await downloadFile(imageURL, destPath);
   });
+
+  for await (let val of promises){
+     console.log(val);
+  }
   
   return {
     props: {

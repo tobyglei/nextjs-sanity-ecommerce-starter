@@ -12,7 +12,7 @@ export async function downloadFile(url, subPath) {
       return;
     }
     const file = fs.createWriteStream(dest);
-    await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
             https.get(url, (res) => {
                 const filePath = fs.createWriteStream(dest);
                 res.pipe(filePath)
